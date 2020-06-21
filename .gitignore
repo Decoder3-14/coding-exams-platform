@@ -1,0 +1,4 @@
+venv/
+.idea/
+courses/migrations
+users/migrations
