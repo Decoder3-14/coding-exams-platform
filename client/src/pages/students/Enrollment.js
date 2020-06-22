@@ -1,64 +1,72 @@
 import React from 'react';
 import StudentPage from "../../core/StudentPage";
 import {connect} from "react-redux";
+import {setCurrentSession} from "../../actions/student";
+import moment from "moment";
+import * as STUDENT_PATHS from "../../paths/student";
+import {Link} from "react-router-dom";
 
 
 class Enrollment extends StudentPage {
+
+    BREAD_CRUMB_LINKS = [
+        {link: STUDENT_PATHS.DASHBOARD, title: 'Dashboard'},
+        {link: STUDENT_PATHS.ENROLLMENT, title: this.props.student.currentEnrollment.title},
+    ];
 
     constructor(props) {
         super(props);
         this.createHeader();
         this.createBreadCrumb();
-        this.createContent();
-        this.createFooter();
     }
 
-
-    createContent() {
-        this.CONTENT = (
-            <div className="container-fluid">
-                <div className="row mt-5">
-                    <div className="col-md-12">
-                        <div id="accordion">
-                            <div className="card">
-                                <div className="card-header" id="headingOne">
-                                    <h5 className="mb-0">
-                                        <div className="row">
-                                            <div className="col-6 text-left mt-1"><span>user answer for question 1</span></div>
-                                            <div className="col-6 text-right"><button data-toggle="collapse"
-                                                                                      data-target="#answer-view" aria-expanded="true"
-                                                                                      aria-controls="answer-view" className='btn btn-info'>View</button></div>
-                                        </div>
-                                    </h5>
+    render() {
+        let currentEnrollment = this.props.student.currentEnrollment;
+        return (
+            <div>
+                {this.HEADER && this.HEADER}
+                {this.BREAD_CRUMB && this.BREAD_CRUMB}
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-md-10 offset-md-1">
+                            <div className="card mt-3">
+                                <div className="card-header text-left">
+                                    <h4>{currentEnrollment.title} Sessions</h4>
                                 </div>
-
-                                <div className="collapse hide" aria-labelledby="answer-view"  id="answer-view"
-                                     data-parent="#accordion">
-                                    <div className="card-body">
-                                        <small>Submitted on: <b>2323/234/23</b></small>
-                                        <hr />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="accordion">
-                            <div className="card">
-                                <div className="card-header" id="headingOne">
-                                    <h5 className="mb-0">
-                                        <div className="row">
-                                            <div className="col-6 text-left mt-1"><span>user answer for question 1</span></div>
-                                            <div className="col-6 text-right"><button data-toggle="collapse"
-                                                                                      data-target="#answer-view" aria-expanded="true"
-                                                                                      aria-controls="answer-view" className='btn btn-info'>View</button></div>
-                                        </div>
-                                    </h5>
-                                </div>
-
-                                <div id="collapseOne" className="collapse hide" aria-labelledby="answer-view"  id="answer-view"
-                                     data-parent="#accordion">
-                                    <div className="card-body">
-                                        <small>Submitted on: <b>2323/234/23</b></small>
-                                        <hr />
+                                <div className="card-body">
+                                    <div className="text-left">
+                                        {currentEnrollment.sessions.length > 0 ? (
+                                            <table className="table table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Session title</th>
+                                                    <th scope="col">Questions</th>
+                                                    <th scope="col">Create date</th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {currentEnrollment.sessions.map((session, index) => (
+                                                    <tr>
+                                                        <th scope="row">{index + 1}</th>
+                                                        <td>
+                                                            <Link onClick={() => this.props.setCurrentSession(session)}
+                                                                  to={`${STUDENT_PATHS.SESSION}/${currentEnrollment.title}/${session.title}`}
+                                                                  className="font-weight-bold">{session.title}</Link>
+                                                        </td>
+                                                        <td>{session.questions.length} Questions(s)</td>
+                                                        <td>{moment(session.created_at).format('YYYY/MM/DD HH:MM')}</td>
+                                                        <td><button className="btn btn-warning">Apply</button></td>
+                                                    </tr>
+                                                ))}
+                                                </tbody>
+                                            </table>
+                                        ) : (
+                                            <div className="alert alert-warning mt-3">
+                                                You Have not been enrolled to any courses.
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -66,11 +74,7 @@ class Enrollment extends StudentPage {
                     </div>
                 </div>
             </div>
-        );
-    }
-
-    render() {
-        return super.render();
+        )
     }
 
 }
@@ -78,4 +82,4 @@ class Enrollment extends StudentPage {
 const mapStateToProps = state => ({
     student: state.student,
 });
-export default connect(mapStateToProps, {})(Enrollment);
+export default connect(mapStateToProps, {setCurrentSession})(Enrollment);

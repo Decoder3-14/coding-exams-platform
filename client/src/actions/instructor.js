@@ -25,11 +25,11 @@ export const enrollStudents = data => dispatch => {
     };
     const body = JSON.stringify(data);
 
-    axios.post(`http://127.0.0.1:8000/api/courses/enroll-students/`, body, config)
+    axios.post(`http://127.0.0.1:8000/api/courses/enroll-students`, body, config)
         .then(res => {
             dispatch({
                 type: INSTRUCTOR_TYPES.ENROL_STUDENTS,
-                payload: res.data
+                payload: res.data.course
             });
             alert('Successfully submitted.');
         })

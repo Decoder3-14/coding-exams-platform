@@ -21,7 +21,16 @@ export default function (state=initialState, action) {
         case INSTRUCTOR_TYPES.CURRENT_SESSION:
             return {...state, currentSession: payload}
         case INSTRUCTOR_TYPES.ENROL_STUDENTS:
-
+             return {
+                ...state, courses: state.courses.map(obj => {
+                    if (obj.id === state.currentCourse.id) {
+                        return {
+                            ...payload
+                        }
+                    }
+                    return obj;
+                }), currentCourse: {...payload}
+            }
         case INSTRUCTOR_TYPES.FETCH_COURSES:
             return {...state, courses: payload}
 

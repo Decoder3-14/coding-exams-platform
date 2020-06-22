@@ -1,8 +1,9 @@
 from rest_framework import status, viewsets
 from rest_framework.response import Response
+
+from courses.serializers import EnrollmentSerializer
 from .models import User, Student
 from .serializers import UserSerializer, CustomRegisterSerializer
-from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -54,14 +55,7 @@ def register_view(request):
 
 @api_view(['GET', ])
 @permission_classes([IsAuthenticated])
-def fetch_profile_view(request):
-    user_obj = UserSerializer(request.user)
-    return Response({'user': user_obj.data})
-
-
-@api_view(['GET', ])
-@permission_classes([IsAuthenticated])
 def fetch_enrollments_view(request):
     user = User.objects.filter(email=request.user.email).first()
-    enrollments = user.enrollments.all()
-    return Response({'enrollments': enrollments})
+    # response = [item[0].data for item in user.members.all()]
+    return Response({'enrollments': EnrollmentSerializer(user.members.all(), many=True).data})

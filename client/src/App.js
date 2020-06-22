@@ -26,7 +26,7 @@ import Course from "./pages/instructor/Course";
 import Session from "./pages/instructor/Session";
 import Enrollment from "./pages/students/Enrollment";
 import StudentDashboard from "./pages/students/Dashboard";
-import StartSession from "./pages/students/StartSession";
+import StudentSession from "./pages/students/Session";
 import StudentProfile from "./pages/students/StudentProfile";
 import Logout from "./pages/common/Logout";
 
@@ -54,9 +54,9 @@ function App(props) {
                     <InstructorRouter path={`${INSTRUCTOR_PATHS.COURSE}/:course/enroll-students`} state={state} component={EnrollStudentsFromList} exact/>
                     <InstructorRouter path={`${INSTRUCTOR_PATHS.SESSION}/:session`} state={state} component={Session} exact/>
 
-                    <StudentRouter path={STUDENT_PATHS.ENROLLMENT} state={state} component={Enrollment} exact/>
                     <StudentRouter path={STUDENT_PATHS.DASHBOARD} state={state} component={StudentDashboard} exact/>
-                    <StudentRouter path={STUDENT_PATHS.START_SESSION} state={state} component={StartSession} exact/>
+                    <StudentRouter path={`${STUDENT_PATHS.ENROLLMENT}/:enrollment`} state={state} component={Enrollment} exact/>
+                    <StudentRouter path={`${STUDENT_PATHS.SESSION}/:enrollment/:session`} state={state} component={StudentSession} exact/>
                     <StudentRouter path={STUDENT_PATHS.PROFILE} state={state} component={StudentProfile} exact/>
                     <Route path="*" component={() => <div style={{minHeight: '100vh'}} className="font-weight-bold text-white d-flex flex-row
                      justify-content-center align-items-center">Not found 404.</div>} />

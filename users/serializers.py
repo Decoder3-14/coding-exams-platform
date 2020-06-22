@@ -1,3 +1,4 @@
+from courses.models import Course
 from .models import User, Student
 from rest_framework import serializers
 
@@ -40,3 +41,4 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
         model = User
         fields = ('email', 'username', 'fullName')
         read_only_fields = ('email', )
+

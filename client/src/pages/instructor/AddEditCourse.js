@@ -23,9 +23,6 @@ class AddEditCourse extends InstructorPage {
         this.createFooter();
     }
 
-    createBreadCrumb() {
-        this.BREAD_CRUMB = getNav(this.BREAD_CRUMB_LINKS, '');
-    }
 
     onChange = e => {
         this.setState({[e.target.name]: e.target.value})

@@ -12,8 +12,9 @@ class Course extends InstructorPage {
 
     BREAD_CRUMB_LINKS = [
         {link: INSTRUCTOR_PATHS.DASHBOARD, title: this.props.instructor.currentCourse.title},
-        {link: INSTRUCTOR_PATHS.DASHBOARD, title: 'Sessions'},
+        {link: INSTRUCTOR_PATHS.SESSIONS, title: 'Sessions'},
     ];
+
 
     constructor(props) {
         super(props);

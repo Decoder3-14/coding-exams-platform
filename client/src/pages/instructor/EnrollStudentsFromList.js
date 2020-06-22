@@ -4,7 +4,6 @@ import getNav from "../../partials/Nav";
 import InstructorPage from "../../core/InstructorPage";
 import {connect} from "react-redux";
 import {setCurrentSession, enrollStudents} from "../../actions/instructor";
-import Papa  from 'papaparse'
 
 
 class EnrollStudentsFromList extends InstructorPage {
@@ -19,7 +18,7 @@ class EnrollStudentsFromList extends InstructorPage {
     constructor(props) {
         super(props);
         this.state = {
-            studentsList: [],
+            students: [],
             loading: false,
             incorrectSignature: false
         };
@@ -29,37 +28,35 @@ class EnrollStudentsFromList extends InstructorPage {
     }
 
 
-    createBreadCrumb() {
-        this.BREAD_CRUMB = getNav(this.BREAD_CRUMB_LINKS, '');
-    }
+
 
 
     csvFileReader = e => {
         let content = this.fileReader.result;
-        const rows = content.split('\n');
+        let rows = content.split('\n');
 
         const header = rows[0].split(',');
+        rows.splice(0, 1); // removing the header
         if (header.includes('email') || header.includes('Email')) {
-            // can also have more fields based on the csv file
-            console.log(header.indexOf('email'), header);
-            // "32345345,xy@std.sehir.edu.tr,x y,dep 1
-            let studentsList = [];
-            // rows.splice(0, 1).map(row => {
-            //     studentsList.push(row[header.indexOf('email')]);
-            // })
-            this.setState({incorrectSignature: false, studentsList: studentsList}, () => console.log(studentsList))
+            this.setState({loading: false, incorrectSignature: false, students: rows.map(row =>
+                    row.split(',')[header.indexOf('email')])}, () => {
+                this.props.enrollStudents({students: this.state.students,
+                    course: this.props.instructor.currentCourse.id});
+            })
         } else {
             const header = rows[0].split(',');
             console.log(header);
             console.log(rows);
-            this.setState({incorrectSignature: true})
+            this.setState({loading: false, incorrectSignature: true})
         }
     };
 
     csvFileHandler = file => {
-        this.fileReader = new FileReader();
-        this.fileReader.onloadend = this.csvFileReader;
-        this.fileReader.readAsText(file);
+        this.setState({loading: true}, () => {
+            this.fileReader = new FileReader();
+            this.fileReader.onloadend = this.csvFileReader;
+            this.fileReader.readAsText(file);
+        })
     };
 
     render() {
@@ -71,6 +68,7 @@ class EnrollStudentsFromList extends InstructorPage {
                 <div className="container mt-5">
                     <div className="row">
                         <div className="col-md-8 offset-md-2 text-center">
+                            {this.state.loading && <div className="alert alert-warning">Loading</div>}
                             <div className="jumbotron jumbotron-fluid rounded">
                                 <div className="container">
                                     <h1 className="display-4">Enroll students</h1>

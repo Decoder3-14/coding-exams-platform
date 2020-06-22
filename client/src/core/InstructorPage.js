@@ -21,13 +21,16 @@ class InstructorPage extends PageWrapper {
         super(props);
     }
 
+    createBreadCrumb() {
+        this.BREAD_CRUMB = getNav(this.BREAD_CRUMB_LINKS, '');
+    }
+
+
     createHeader() {
         this.HEADER = getHeader(this.HEADER_LINKS);
     }
 
-    createBreadCrumb() {
-        this.BREAD_CRUMB = getNav(this.BREAD_CRUMB_LINKS, '');
-    }
+
 }
 
 export default InstructorPage;

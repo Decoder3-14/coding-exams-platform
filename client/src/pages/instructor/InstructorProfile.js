@@ -8,12 +8,11 @@ class InstructorProfile extends InstructorPage {
     constructor(props) {
         super(props);
         this.createHeader();
-        this.createBreadCrumb();
         this.createFooter();
     }
 
     render() {
-        let {user} = this.props.common.profile;
+        let user = this.props.common.profile;
         return (
             <div>
                 {this.HEADER && this.HEADER}

@@ -21,9 +21,6 @@ class Dashboard extends InstructorPage {
         this.createFooter();
     }
 
-    createBreadCrumb() {
-        this.BREAD_CRUMB = getNav(this.BREAD_CRUMB_LINKS, '');
-    }
 
     componentDidMount() {
         this.props.fetchCourses();

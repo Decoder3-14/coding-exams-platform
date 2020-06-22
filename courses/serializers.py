@@ -44,3 +44,38 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = ['id', 'title', 'owner', 'created_at', 'sessions', 'members']
         extra_kwargs = {'students': {'required': False}}
+
+
+class EnrollmentApplicationSerializer(serializers.HyperlinkedModelSerializer):
+
+    def get_queryset(self):
+        return Application.objects.filter(user=self.request.user)
+
+    class Meta:
+        model = Application
+        fields = ['session']
+
+
+class EnrollmentSessionSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True, read_only=True)
+    applications = ApplicationSerializer(many=True, read_only=True)
+
+    def get_queryset(self):
+        return Application.objects.filter(user=self.request.user)
+
+    class Meta:
+        model = Session
+        fields = ['id', 'course', 'title', 'repl_src', 'created_at', 'questions', 'applications']
+
+
+class EnrollmentSerializer(serializers.ModelSerializer):
+
+    owner = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+    sessions = EnrollmentSessionSerializer(many=True, read_only=True)
+    members = UserSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Course
+        fields = ['id', 'title', 'owner', 'created_at', 'sessions', 'members']

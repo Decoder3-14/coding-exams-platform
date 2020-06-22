@@ -15,32 +15,18 @@ class StudentPage extends PageWrapper {
     ];
 
 
-    student = null;
-
     constructor(props) {
         super(props);
         this.student = this.props.student;
         // alert(this.student);
     }
 
-     createHeader() {
+    createHeader() {
         this.HEADER = getHeader(this.HEADER_LINKS);
-     }
+    }
 
-     createBreadCrumb() {
+    createBreadCrumb() {
         this.BREAD_CRUMB = getNav(this.BREAD_CRUMB_LINKS, '');
-     }
-
-
-    render() {
-        return (
-            <div>
-                {this.HEADER && this.HEADER}
-                {this.BREAD_CRUMB && this.BREAD_CRUMB}
-                {this.CONTENT && this.CONTENT}
-                {this.FOOTER && this.FOOTER}
-            </div>
-        );
     }
 }
 
