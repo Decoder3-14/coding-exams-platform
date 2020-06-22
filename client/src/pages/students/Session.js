@@ -2,6 +2,7 @@ import React from 'react';
 import StudentPage from "../../core/StudentPage";
 import {connect} from "react-redux";
 import * as STUDENT_PATHS from "../../paths/student";
+import {submitSession} from "../../actions/student";
 
 
 class Session extends StudentPage {
@@ -15,7 +16,8 @@ class Session extends StudentPage {
     constructor(props) {
         super(props);
         this.state = {
-            answers: []
+            session: this.props.student.currentSession.id,
+            pairs: []
         }
         this.createHeader();
         this.createBreadCrumb();
@@ -24,29 +26,34 @@ class Session extends StudentPage {
     componentDidMount() {
         let {currentSession} = this.props.student;
         currentSession.questions.map(question => {
-            this.setState({answers: [...this.state.answers, {[question.id]: ''}]})
+            this.setState({pairs: [...this.state.pairs, {'question': question.id, 'answer': ''}]})
             return question;
         });
     }
 
-    onChange = e => {
-        this.setState({[e.target.name]: e.target.value})
+    onChange = (e, question) => {
+        console.log(e.target.value)
+        this.setState({pairs: this.state.pairs.map(obj => {
+                if (obj.question === question) {
+                    return {...obj, answer: e.target.value}
+                }
+            })}, () => console.log(this.state))
     };
 
     onSubmit = e => {
         e.preventDefault();
-         let target = document.querySelector('.editor-container')
-        // create an observer instance
-        let observer = new MutationObserver(function(mutations) {
-            console.log(target.text());
-        });
+        this.props.submitSession(this.state);
     };
 
 
     render() {
-        let {currentEnrollment} = this.props.student;
+        let {currentEnrollment, submissions} = this.props.student;
         let {currentSession} = this.props.student;
-        console.log(currentEnrollment, currentSession)
+        let currentSubmissions = submissions.map(submission => {
+            if (submission.question.id === currentEnrollment.id) {
+                return submission;
+            }
+        })
         return (
             <div>
                 {this.HEADER && this.HEADER}
@@ -60,9 +67,9 @@ class Session extends StudentPage {
                                         <div className="col text-left">
                                             <h5>Session Questions</h5>
                                         </div>
-                                        <div className="col text-right">
+                                        {!submissions.length > 0 && <div className="col text-right">
                                             <button onClick={e => this.onSubmit(e)} className="btn btn-success">Submit your answers</button>
-                                        </div>
+                                        </div>}
                                     </div>
                                 </div>
                             </div>
@@ -94,10 +101,12 @@ class Session extends StudentPage {
                                                 </p>
                                                 <hr />
                                                 <div className="answer">
-                                                    {/*<textarea value={this.state.answers[question.id]} onChange={e =>*/}
-                                                    {/*    this.onChange(e)} name="answer" id="answer"*/}
-                                                    {/*      className="form-control" rows="10" />*/}
-                                                    <iframe frameBorder="0" width="100%" height="500px" src="https://repl.it/@amasad/PitifulLastingWhoopingcrane?lite=tru" />
+                                                    <div className="bg-light p-5">
+                                                        <textarea style={{minHeight: '10em', backgroundColor: '#fefefe'}} value={this.state.pairs[question.id]} onChange={e =>
+                                                            this.onChange(e, question.id)} name="answer" id="answer"
+                                                            className="form-control" rows="10" />
+                                                    </div>
+                                                    <iframe frameBorder="0" width="100%" height="500px" src={`https://repl.it/@Decoder314/repl2?lite=true`} />
                                                 </div>
                                             </div>
                                         </div>
@@ -116,4 +125,4 @@ class Session extends StudentPage {
 const mapStateToProps = state => ({
     student: state.student,
 });
-export default connect(mapStateToProps, {})(Session);
+export default connect(mapStateToProps, {submitSession})(Session);

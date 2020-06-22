@@ -53,7 +53,6 @@ class Course extends InstructorPage {
                                                     <th scope="col">#</th>
                                                     <th scope="col">Session name</th>
                                                     <th scope="col">Questions</th>
-                                                    <th scope="col">Submissions</th>
                                                     <th scope="col">Create date</th>
                                                 </tr>
                                             </thead>
@@ -68,7 +67,6 @@ class Course extends InstructorPage {
                                                             {session.title}</Link>
                                                         </td>
                                                         <td>{session.questions.length} questions</td>
-                                                        <td>{session.applications.length} applications</td>
                                                         <td>{moment(session.created_at).format('YYYY/MM/DD HH:MM')}</td>
                                                     </tr>
                                                 ))}

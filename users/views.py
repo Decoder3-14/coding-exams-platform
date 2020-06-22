@@ -1,7 +1,9 @@
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 
-from courses.serializers import EnrollmentSerializer
+from courses.models import Session, Question, Answer
+from courses.serializers import EnrollmentSerializer, EnrollmentSessionSerializer, AnswerSerializer, \
+    SubmissionSerializer
 from .models import User, Student
 from .serializers import UserSerializer, CustomRegisterSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -59,3 +61,26 @@ def fetch_enrollments_view(request):
     user = User.objects.filter(email=request.user.email).first()
     # response = [item[0].data for item in user.members.all()]
     return Response({'enrollments': EnrollmentSerializer(user.members.all(), many=True).data})
+
+
+@api_view(['POST', ])
+@permission_classes([IsAuthenticated])
+def submit_answers(request):
+    user = User.objects.filter(email=request.user.email).first()
+    pairs = request.data['pairs']
+    for pair in pairs:
+        question = Question.objects.filter(id=pair['question']).first()
+        answer = Answer.objects.create(user=user, question=question, content=pair['answer'])
+        question.answers.add(answer)
+        answer.save()
+        question.save()
+    user.save()
+    return Response({'message': 'Successfully received your submission'})
+
+
+@api_view(['GET', ])
+@permission_classes([IsAuthenticated])
+def fetch_submissions_view(request):
+    user = User.objects.filter(email=request.user.email).first()
+    answers = Answer.objects.filter(user=user).all()
+    return Response({'submissions': SubmissionSerializer(answers, many=True).data})

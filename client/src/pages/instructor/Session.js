@@ -91,9 +91,6 @@ class Session extends InstructorPage {
                                             <div className="col text-left">
                                                 <h4>All Questions</h4>
                                             </div>
-                                            <div className="col text-right">
-                                                <a href="/">{'Applications: ' + this.props.instructor.currentSession.applications.length}</a>
-                                            </div>
                                         </div>
                                     </div>
                                     <div className="card-body">

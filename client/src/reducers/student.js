@@ -3,6 +3,7 @@ import * as COMMON_TYPES from "../types/common";
 
 const initialState = {
     enrollments: [],
+    submissions: [],
     currentEnrollment: null,
     currentSession: null,
     currentSessionSubmitted: false
@@ -15,6 +16,8 @@ export default function (state=initialState, action) {
     switch (type) {
         case STUDENT_TYPES.FETCH_ENROLLMENTS:
             return {...state, enrollments: payload}
+        case STUDENT_TYPES.FETCH_SUBMISSIONS:
+            return {...state, submissions: payload}
         case STUDENT_TYPES.CURRENT_ENROLLMENT:
             return {...state, currentEnrollment: payload}
          case STUDENT_TYPES.CURRENT_SESSION:
