@@ -1,7 +1,7 @@
 import React from 'react';
 import StudentPage from "../../core/StudentPage";
 import { connect } from 'react-redux';
-import {fetchEnrollments, setCurrentEnrollment} from "../../actions/student";
+import {fetchEnrollments, setCurrentEnrollment, fetchSubmissions} from "../../actions/student";
 import moment from "moment";
 import {Link} from "react-router-dom";
 import * as STUDENT_PATHS from "../../paths/student";
@@ -16,6 +16,7 @@ class Dashboard extends StudentPage {
 
     componentDidMount() {
         this.props.fetchEnrollments();
+        this.props.fetchSubmissions();
     }
 
 
@@ -83,4 +84,4 @@ class Dashboard extends StudentPage {
 const mapStateToProps = state => ({
     student: state.student,
 });
-export default connect(mapStateToProps, {fetchEnrollments, setCurrentEnrollment})(Dashboard);
+export default connect(mapStateToProps, {fetchEnrollments, setCurrentEnrollment, fetchSubmissions})(Dashboard);

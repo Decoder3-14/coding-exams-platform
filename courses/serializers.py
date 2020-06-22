@@ -1,5 +1,5 @@
 from users.serializers import UserSerializer
-from .models import Course, Session, Question, Answer, Application
+from .models import Course, Session, Question, Answer
 from rest_framework import serializers
 
 
@@ -15,19 +15,12 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'question', 'user', 'content', 'created_at']
 
 
-class ApplicationSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Application
-        fields = ['session', 'user']
-
-
 class SessionSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
-    applications = ApplicationSerializer(many=True, read_only=True)
 
     class Meta:
         model = Session
-        fields = ['id', 'course', 'title', 'repl_src', 'created_at', 'questions', 'applications']
+        fields = ['id', 'course', 'title', 'repl_src', 'created_at', 'questions']
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -38,7 +31,7 @@ class CourseSerializer(serializers.ModelSerializer):
     members = UserSerializer(many=True, read_only=True)
 
     def get_queryset(self):
-        return Course.objects.filter(owner=self.request.user)
+        return Course.objects.filter(owner=self.request.user).all()
 
     class Meta:
         model = Course
@@ -46,30 +39,15 @@ class CourseSerializer(serializers.ModelSerializer):
         extra_kwargs = {'students': {'required': False}}
 
 
-class EnrollmentApplicationSerializer(serializers.HyperlinkedModelSerializer):
-
-    def get_queryset(self):
-        return Application.objects.filter(user=self.request.user)
-
-    class Meta:
-        model = Application
-        fields = ['session']
-
-
 class EnrollmentSessionSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
-    applications = ApplicationSerializer(many=True, read_only=True)
-
-    def get_queryset(self):
-        return Application.objects.filter(user=self.request.user)
 
     class Meta:
         model = Session
-        fields = ['id', 'course', 'title', 'repl_src', 'created_at', 'questions', 'applications']
+        fields = ['id', 'course', 'title', 'repl_src', 'created_at', 'questions']
 
 
 class EnrollmentSerializer(serializers.ModelSerializer):
-
     owner = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
@@ -79,3 +57,11 @@ class EnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id', 'title', 'owner', 'created_at', 'sessions', 'members']
+
+
+class SubmissionSerializer(serializers.ModelSerializer):
+    question = QuestionSerializer(read_only=True)
+
+    class Meta:
+        model = Answer
+        fields = ['id', 'question', 'content']

@@ -10,7 +10,7 @@ class Index extends CommonPage {
         super(props);
         this.createHeader();
         this.createBreadCrumb();
-         this.createFooter();
+        this.createFooter();
     }
 
 
@@ -21,7 +21,7 @@ class Index extends CommonPage {
                 {this.BREAD_CRUMB && this.BREAD_CRUMB}
                 <div className="container mt-5">
                     <div className="row">
-                        <div className="col-md-10 offset-md-1">
+                        <div className="col-md-10 offset-md-1 bg-light" onClick={this.getContent}>
                             <div className="jumbotron">
                                 <h1 className="display-4">Hello, world!</h1>
                                 <p className="lead">Welcome to this simple web-based tool to create coding sessions.</p>
@@ -30,6 +30,7 @@ class Index extends CommonPage {
                                 <p className="lead">
                                     <Link className="btn btn-warning mx-2" to={COMMON_PATHS.REGISTER} role="button">Register</Link>
                                 </p>
+
                             </div>
                         </div>
                     </div>

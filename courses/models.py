@@ -27,11 +27,6 @@ class Session(models.Model):
         return self.title
 
 
-class Application(models.Model):
-    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='applications')
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='students')
-
-
 class Question(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='questions')
     title = models.CharField(max_length=100)
@@ -45,10 +40,10 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    application = models.ForeignKey(Application, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='owners')
     content = models.TextField()
-    # result = models.FloatField(null=True)
+    points = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
